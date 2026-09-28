@@ -1,0 +1,348 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Floussi – Track every dirham</title>
+<meta name="description" content="Floussi is a simple, private expense tracker made in Morocco. Log spending in seconds, set limits, see what's left, and ask Mizan, your AI money assistant.">
+<meta property="og:title" content="Floussi – Track every dirham">
+<meta property="og:description" content="A simple, private expense tracker made in Morocco.">
+<meta property="og:image" content="https://samir-elasri.github.io/floussi-app/img/og.jpg">
+<meta property="og:type" content="website">
+<meta name="theme-color" content="#060e20">
+<link rel="icon" href="favicon.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;700&family=Cairo:wght@500;700;900&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg:#060e20; --bg2:#0b1630; --card:#101a33; --ink:#eef1ff; --muted:#a3aac4; --line:#000;
+    --accent:#a3a6ff; --mint:#9bffce; --tan:#D2B48C; --btn-ink:#060e20;
+  }
+  * { box-sizing:border-box; }
+  html { scroll-behavior:smooth; }
+  body { margin:0; background:var(--bg); color:var(--ink); font:17px/1.6 "Space Grotesk", system-ui, -apple-system, "Segoe UI", Roboto, Arial, sans-serif; overflow-x:hidden; }
+  html[dir="rtl"] body { font-family:"Cairo", system-ui, "Segoe UI", Tahoma, Arial, sans-serif; }
+  a { color:var(--accent); }
+  .wrap { max-width:1120px; margin:0 auto; padding:0 16px; }
+
+  /* Header */
+  header { position:sticky; top:0; z-index:10; background:rgba(6,14,32,.92); backdrop-filter:blur(8px); border-bottom:3px solid var(--line); }
+  .bar { display:flex; align-items:center; gap:12px; height:64px; }
+  .brand { display:flex; align-items:center; gap:10px; color:var(--ink); text-decoration:none; font-weight:700; font-size:22px; }
+  .brand img { width:36px; height:36px; border:2px solid var(--line); }
+  nav { display:flex; gap:22px; margin-inline-start:auto; }
+  nav a { color:var(--muted); text-decoration:none; font-weight:500; }
+  nav a:hover { color:var(--ink); }
+  .lang { margin-inline-start:12px; background:var(--card); color:var(--ink); border:2px solid var(--line); box-shadow:3px 3px 0 var(--accent);
+          font:inherit; font-size:15px; padding:6px 10px; cursor:pointer; }
+  @media (max-width:760px) { nav { display:none; } .lang { margin-inline-start:auto; } }
+
+  /* Buttons */
+  .btn { display:inline-flex; align-items:center; gap:12px; background:var(--mint); color:var(--btn-ink); text-decoration:none; font-weight:700;
+         border:3px solid var(--line); box-shadow:6px 6px 0 var(--line); padding:12px 22px; font-size:18px; transition:transform .1s, box-shadow .1s; }
+  .btn:hover { transform:translate(-2px,-2px); box-shadow:8px 8px 0 var(--line); }
+  .btn:active { transform:translate(4px,4px); box-shadow:2px 2px 0 var(--line); }
+  .btn svg { width:26px; height:26px; flex:none; }
+  .btn small { display:block; font-size:12px; font-weight:500; line-height:1.1; }
+  .btn span { line-height:1.2; }
+
+  /* Hero */
+  .hero { padding:64px 0 72px; position:relative; }
+  .hero .wrap { display:grid; grid-template-columns:1.15fr .85fr; gap:48px; align-items:center; }
+  .tag { display:inline-block; background:var(--tan); color:var(--btn-ink); border:2px solid var(--line); font-weight:700; font-size:14px; padding:4px 12px; margin-bottom:18px; }
+  h1 { font-size:clamp(40px, 7vw, 72px); line-height:1.05; margin:0 0 20px; letter-spacing:-.02em; }
+  html[dir="rtl"] h1 { letter-spacing:0; line-height:1.3; }
+  h1 em { font-style:normal; color:var(--mint); }
+  .lead { color:var(--muted); font-size:19px; margin:0 0 30px; max-width:560px; }
+  .sub { color:var(--muted); font-size:14px; margin-top:14px; }
+  .phone { border:6px solid var(--line); box-shadow:14px 14px 0 var(--accent); line-height:0; background:#000; }
+  .phone img { width:100%; height:auto; display:block; }
+  .hero .phone { max-width:320px; margin-inline:auto; transform:rotate(2deg); }
+  html[dir="rtl"] .hero .phone { transform:rotate(-2deg); box-shadow:-14px 14px 0 var(--accent); }
+  .sq { position:absolute; border:8px solid #1e2842; pointer-events:none; z-index:0; }
+  .hero .wrap { position:relative; z-index:1; }
+  @media (max-width:860px) {
+    .hero { padding:40px 0 56px; }
+    .hero .wrap { grid-template-columns:1fr; gap:44px; }
+    .hero .phone { max-width:260px; }
+    .sq { display:none; }
+  }
+
+  /* Sections */
+  section { padding:72px 0; }
+  .alt { background:var(--bg2); border-block:3px solid var(--line); }
+  h2 { font-size:clamp(30px, 4.5vw, 44px); line-height:1.15; margin:0 0 12px; }
+  .intro { color:var(--muted); margin:0 0 40px; max-width:620px; }
+  .bar-accent { width:90px; height:12px; background:var(--tan); border:3px solid var(--line); margin:0 0 20px; }
+
+  .grid { display:grid; grid-template-columns:repeat(auto-fill, minmax(240px, 1fr)); gap:22px; }
+  .card { background:var(--card); border:3px solid var(--line); box-shadow:6px 6px 0 var(--line); padding:22px; }
+  html[dir="rtl"] .card { box-shadow:-6px 6px 0 var(--line); }
+  .card .ic { width:46px; height:46px; display:flex; align-items:center; justify-content:center; font-size:24px; border:3px solid var(--line); margin-bottom:14px; }
+  .card h3 { margin:0 0 6px; font-size:19px; }
+  .card p { margin:0; color:var(--muted); font-size:15px; }
+
+  .shots { display:grid; grid-template-columns:repeat(4, 1fr); gap:28px; }
+  .shots figure { margin:0; }
+  .shots .phone { border-width:5px; box-shadow:9px 9px 0 var(--c, var(--accent)); }
+  html[dir="rtl"] .shots .phone { box-shadow:-9px 9px 0 var(--c, var(--accent)); }
+  .shots figcaption { margin-top:18px; font-weight:700; text-align:center; }
+  @media (max-width:860px) {
+    .shots { display:flex; overflow-x:auto; scroll-snap-type:x mandatory; padding:4px 16px 20px; margin:0 -16px; }
+    .shots figure { flex:0 0 62%; scroll-snap-align:center; }
+  }
+
+  .privacy { display:grid; grid-template-columns:1fr 1fr; gap:40px; align-items:center; }
+  .checks { list-style:none; padding:0; margin:0; display:grid; gap:14px; }
+  .checks li { background:var(--card); border:3px solid var(--line); padding:14px 16px; display:flex; gap:12px; align-items:center; font-weight:500; }
+  .checks li::before { content:"✓"; flex:none; width:28px; height:28px; display:flex; align-items:center; justify-content:center; background:var(--mint); color:var(--btn-ink); border:2px solid var(--line); font-weight:700; }
+  @media (max-width:760px) { .privacy { grid-template-columns:1fr; } }
+
+  .cta { text-align:center; }
+  .cta .intro { margin-inline:auto; }
+  .cta .icon { width:96px; height:96px; border:4px solid var(--line); box-shadow:8px 8px 0 var(--tan); margin-bottom:24px; }
+
+  footer { border-top:3px solid var(--line); padding:28px 0; color:var(--muted); font-size:14px; }
+  footer .wrap { display:flex; flex-wrap:wrap; gap:10px 24px; justify-content:space-between; }
+  footer a { color:var(--muted); }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="wrap bar">
+    <a class="brand" href="#top"><img src="img/icon.png" alt=""><span data-i="name">Floussi</span></a>
+    <nav>
+      <a href="#features" data-i="nav.features">Features</a>
+      <a href="#screens" data-i="nav.screens">Screenshots</a>
+      <a href="#privacy" data-i="nav.privacy">Privacy</a>
+      <a href="#contact" data-i="nav.contact">Contact</a>
+    </nav>
+    <select class="lang" id="lang" aria-label="Language">
+      <option value="ary">الدارجة</option>
+      <option value="ar">العربية</option>
+      <option value="fr">Français</option>
+      <option value="en">English</option>
+      <option value="es">Español</option>
+    </select>
+  </div>
+</header>
+
+<main id="top">
+  <div class="hero">
+    <div class="sq" style="inset-inline-start:-90px;top:60px;width:200px;height:200px;transform:rotate(12deg)"></div>
+    <div class="wrap">
+      <div>
+        <span class="tag" data-i="hero.tag">Made in Morocco</span>
+        <h1 data-i="hero.title" data-html>Track every <em>dirham</em>.</h1>
+        <p class="lead" data-i="hero.lead">A simple, private expense tracker. Log spending in seconds, set limits, see what's left of your income, and ask Mizan, your AI money assistant.</p>
+        <a class="btn play" href="#">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M3.6 1.8c-.4.2-.6.7-.6 1.2v18c0 .5.2 1 .6 1.2l10-10.2L3.6 1.8Zm11.4 8.8 2.7-2.7L5.4.9l9.6 9.7Zm0 2.8-9.6 9.7 12.3-7-2.7-2.7Zm5.4-3-2.6-1.5-3 3 3 3 2.6-1.5c.8-.5.8-2.5 0-3Z"/></svg>
+          <span><small data-i="cta.small">Get it on</small>Google Play</span>
+        </a>
+        <p class="sub" data-i="hero.free">Free · Android · No account needed</p>
+      </div>
+      <div class="phone"><img data-shot="1-home" src="img/en-1-home.webp" width="540" height="1172" alt=""></div>
+    </div>
+  </div>
+
+  <section id="features" class="alt">
+    <div class="wrap">
+      <div class="bar-accent"></div>
+      <h2 data-i="f.title">Everything you need, nothing you don't</h2>
+      <p class="intro" data-i="f.intro">Built for everyday life in Morocco, and simple enough to use every day.</p>
+      <div class="grid">
+        <div class="card"><div class="ic" style="background:var(--mint)">⚡</div><h3 data-i="f1.t">Add in seconds</h3><p data-i="f1.d">Amount, category, done. Change the date or add a note if you want.</p></div>
+        <div class="card"><div class="ic" style="background:var(--tan)">🧺</div><h3 data-i="f2.t">Moroccan categories</h3><p data-i="f2.d">Groceries, taxi, rent, coffee, internet… plus your own categories.</p></div>
+        <div class="card"><div class="ic" style="background:var(--accent)">💰</div><h3 data-i="f3.t">Income and what's left</h3><p data-i="f3.d">Add your salary and extra income, and always know what's left.</p></div>
+        <div class="card"><div class="ic" style="background:var(--mint)">🚦</div><h3 data-i="f4.t">Spending limits</h3><p data-i="f4.d">Set a limit per category and get a warning before you go over it.</p></div>
+        <div class="card"><div class="ic" style="background:var(--tan)">📊</div><h3 data-i="f5.t">Clear charts</h3><p data-i="f5.d">See where your money goes by day, week, month or year.</p></div>
+        <div class="card"><div class="ic" style="background:var(--accent)">✨</div><h3 data-i="f6.t">Mizan, your AI assistant</h3><p data-i="f6.d">Ask about your spending in your own language. Powered by Google Gemini (needs a free API key).</p></div>
+        <div class="card"><div class="ic" style="background:var(--mint)">📄</div><h3 data-i="f7.t">PDF report and backup</h3><p data-i="f7.d">Export a PDF report, back up your data to a file and restore it on a new phone.</p></div>
+        <div class="card"><div class="ic" style="background:var(--tan)">🌍</div><h3 data-i="f8.t">5 languages, 20 currencies</h3><p data-i="f8.d">Darija, Arabic, French, English and Spanish. Dirham by default. Dark and light themes.</p></div>
+      </div>
+    </div>
+  </section>
+
+  <section id="screens">
+    <div class="wrap">
+      <div class="bar-accent" style="background:var(--mint)"></div>
+      <h2 data-i="s.title">See it in action</h2>
+      <p class="intro" data-i="s.intro">Clean screens, big numbers, no clutter.</p>
+      <div class="shots">
+        <figure style="--c:var(--tan)"><div class="phone"><img data-shot="1-home" src="img/en-1-home.webp" width="540" height="1172" loading="lazy" alt=""></div><figcaption data-i="s1">Know where your money goes</figcaption></figure>
+        <figure style="--c:var(--mint)"><div class="phone"><img data-shot="2-add" src="img/en-2-add.webp" width="540" height="1172" loading="lazy" alt=""></div><figcaption data-i="s2">Add an expense in seconds</figcaption></figure>
+        <figure style="--c:var(--accent)"><div class="phone"><img data-shot="3-analytics" src="img/en-3-analytics.webp" width="540" height="1172" loading="lazy" alt=""></div><figcaption data-i="s3">Your spending at a glance</figcaption></figure>
+        <figure style="--c:var(--tan)"><div class="phone"><img data-shot="5-mizan" src="img/en-5-mizan.webp" width="540" height="1172" loading="lazy" alt=""></div><figcaption data-i="s4">Ask Mizan anything</figcaption></figure>
+      </div>
+    </div>
+  </section>
+
+  <section id="privacy" class="alt">
+    <div class="wrap privacy">
+      <div>
+        <div class="bar-accent" style="background:var(--accent)"></div>
+        <h2 data-i="p.title">Your data stays on your phone</h2>
+        <p class="intro" data-i="p.intro">Floussi has no account and no servers of its own. Your expenses never leave your device unless you choose to ask Mizan.</p>
+        <a href="https://samir-elasri.github.io/floussi-privacy/" data-i="p.link">Read the privacy policy →</a>
+      </div>
+      <ul class="checks">
+        <li data-i="p1">No account, no sign-up</li>
+        <li data-i="p2">Expenses saved only on your phone</li>
+        <li data-i="p3">Back up to a file you control</li>
+        <li data-i="p4">Delete everything in one tap</li>
+      </ul>
+    </div>
+  </section>
+
+  <section id="contact" class="cta">
+    <div class="wrap">
+      <img class="icon" src="img/icon.png" alt="Floussi">
+      <h2 data-i="c.title">Start tracking today</h2>
+      <p class="intro" data-i="c.intro">Floussi is free, with a small ad on some screens. Questions or ideas? Email us, we read everything.</p>
+      <a class="btn play" href="#">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M3.6 1.8c-.4.2-.6.7-.6 1.2v18c0 .5.2 1 .6 1.2l10-10.2L3.6 1.8Zm11.4 8.8 2.7-2.7L5.4.9l9.6 9.7Zm0 2.8-9.6 9.7 12.3-7-2.7-2.7Zm5.4-3-2.6-1.5-3 3 3 3 2.6-1.5c.8-.5.8-2.5 0-3Z"/></svg>
+        <span><small data-i="cta.small">Get it on</small>Google Play</span>
+      </a>
+      <p class="sub"><a href="mailto:samir1elasri@gmail.com">samir1elasri@gmail.com</a></p>
+    </div>
+  </section>
+</main>
+
+<footer>
+  <div class="wrap">
+    <span>© 2026 Samir El Asri · <span data-i="foot.made">Made in Morocco</span></span>
+    <span><a href="https://samir-elasri.github.io/floussi-privacy/" data-i="nav.policy">Privacy policy</a> · <a href="mailto:samir1elasri@gmail.com" data-i="nav.contact">Contact</a></span>
+  </div>
+</footer>
+
+<script>
+const PLAY = "https://play.google.com/store/apps/details?id=com.sam.lasry.floussi";
+const T = {
+  en: {},
+  fr: {
+    "nav.features":"Fonctionnalités","nav.screens":"Captures","nav.privacy":"Confidentialité","nav.contact":"Contact","nav.policy":"Politique de confidentialité",
+    "hero.tag":"Conçu au Maroc","hero.title":"Suivez chaque <em>dirham</em>.",
+    "hero.lead":"Une application simple et privée pour suivre vos dépenses. Notez-les en quelques secondes, fixez des limites, voyez ce qu'il vous reste et demandez à Mizan, votre assistant financier IA.",
+    "cta.small":"Disponible sur","hero.free":"Gratuit · Android · Sans compte",
+    "f.title":"Tout ce qu'il faut, rien de trop","f.intro":"Pensée pour la vie quotidienne au Maroc, et assez simple pour s'en servir chaque jour.",
+    "f1.t":"Ajout en quelques secondes","f1.d":"Montant, catégorie, c'est fait. Changez la date ou ajoutez une note si besoin.",
+    "f2.t":"Catégories marocaines","f2.d":"Courses, taxi, loyer, café, internet… plus vos propres catégories.",
+    "f3.t":"Revenus et reste","f3.d":"Ajoutez votre salaire et vos revenus supplémentaires, et sachez toujours ce qu'il vous reste.",
+    "f4.t":"Limites de dépenses","f4.d":"Fixez une limite par catégorie et soyez prévenu avant de la dépasser.",
+    "f5.t":"Graphiques clairs","f5.d":"Voyez où va votre argent par jour, semaine, mois ou année.",
+    "f6.t":"Mizan, votre assistant IA","f6.d":"Posez vos questions sur vos dépenses dans votre langue. Propulsé par Google Gemini (clé API gratuite requise).",
+    "f7.t":"Rapport PDF et sauvegarde","f7.d":"Exportez un rapport PDF, sauvegardez vos données dans un fichier et restaurez-les sur un nouveau téléphone.",
+    "f8.t":"5 langues, 20 devises","f8.d":"Darija, arabe, français, anglais et espagnol. Dirham par défaut. Thèmes sombre et clair.",
+    "s.title":"Aperçu","s.intro":"Des écrans clairs, de grands chiffres, rien de superflu.",
+    "s1":"Sachez où va votre argent","s2":"Ajoutez une dépense en quelques secondes","s3":"Vos dépenses en un coup d'œil","s4":"Demandez tout à Mizan",
+    "p.title":"Vos données restent sur votre téléphone","p.intro":"Floussi n'a ni compte ni serveur. Vos dépenses ne quittent jamais votre appareil, sauf si vous choisissez de parler à Mizan.",
+    "p.link":"Lire la politique de confidentialité →","p1":"Pas de compte, pas d'inscription","p2":"Dépenses enregistrées uniquement sur votre téléphone","p3":"Sauvegarde dans un fichier qui vous appartient","p4":"Tout supprimer d'un seul geste",
+    "c.title":"Commencez dès aujourd'hui","c.intro":"Floussi est gratuit, avec une petite publicité sur certains écrans. Une question ou une idée ? Écrivez-nous, nous lisons tout.",
+    "foot.made":"Conçu au Maroc"
+  },
+  es: {
+    "nav.features":"Funciones","nav.screens":"Capturas","nav.privacy":"Privacidad","nav.contact":"Contacto","nav.policy":"Política de privacidad",
+    "hero.tag":"Hecho en Marruecos","hero.title":"Controla cada <em>dírham</em>.",
+    "hero.lead":"Una app sencilla y privada para controlar tus gastos. Anótalos en segundos, pon límites, mira cuánto te queda de tus ingresos y pregunta a Mizan, tu asistente financiero con IA.",
+    "cta.small":"Disponible en","hero.free":"Gratis · Android · Sin cuenta",
+    "f.title":"Todo lo que necesitas, nada más","f.intro":"Pensada para la vida diaria en Marruecos, y tan sencilla que la usarás cada día.",
+    "f1.t":"Añade en segundos","f1.d":"Importe, categoría y listo. Cambia la fecha o añade una nota si quieres.",
+    "f2.t":"Categorías marroquíes","f2.d":"Compra, taxi, alquiler, café, internet… y tus propias categorías.",
+    "f3.t":"Ingresos y lo que te queda","f3.d":"Añade tu sueldo y tus ingresos extra, y sabe siempre cuánto te queda.",
+    "f4.t":"Límites de gasto","f4.d":"Pon un límite por categoría y recibe un aviso antes de pasarte.",
+    "f5.t":"Gráficos claros","f5.d":"Mira a dónde va tu dinero por día, semana, mes o año.",
+    "f6.t":"Mizan, tu asistente con IA","f6.d":"Pregunta por tus gastos en tu idioma. Con Google Gemini (necesita una clave API gratuita).",
+    "f7.t":"Informe PDF y copia de seguridad","f7.d":"Exporta un informe PDF, guarda tus datos en un archivo y restáuralos en un móvil nuevo.",
+    "f8.t":"5 idiomas, 20 monedas","f8.d":"Darija, árabe, francés, inglés y español. Dírham por defecto. Tema oscuro y claro.",
+    "s.title":"Así se ve","s.intro":"Pantallas limpias, números grandes, sin desorden.",
+    "s1":"Sabe a dónde va tu dinero","s2":"Añade un gasto en segundos","s3":"Tus gastos de un vistazo","s4":"Pregúntale a Mizan",
+    "p.title":"Tus datos se quedan en tu móvil","p.intro":"Floussi no tiene cuentas ni servidores propios. Tus gastos no salen de tu dispositivo, salvo si decides preguntar a Mizan.",
+    "p.link":"Leer la política de privacidad →","p1":"Sin cuenta, sin registro","p2":"Gastos guardados solo en tu móvil","p3":"Copia de seguridad en un archivo tuyo","p4":"Borra todo con un toque",
+    "c.title":"Empieza hoy","c.intro":"Floussi es gratis, con un pequeño anuncio en algunas pantallas. ¿Preguntas o ideas? Escríbenos, lo leemos todo.",
+    "foot.made":"Hecho en Marruecos"
+  },
+  ar: {
+    "name":"فلوسي",
+    "nav.features":"المزايا","nav.screens":"لقطات","nav.privacy":"الخصوصية","nav.contact":"تواصل معنا","nav.policy":"سياسة الخصوصية",
+    "hero.tag":"صُنع في المغرب","hero.title":"تتبّع كل <em>درهم</em>.",
+    "hero.lead":"تطبيق بسيط وخاص لتتبّع المصاريف. سجّل ما تنفقه في ثوانٍ، وضع حدوداً للإنفاق، واعرف ما تبقّى من دخلك، واسأل ميزان، مساعدك المالي الذكي.",
+    "cta.small":"حمّله من","hero.free":"مجاني · أندرويد · بلا حساب",
+    "f.title":"كل ما تحتاجه، ولا شيء زائد","f.intro":"مصمَّم للحياة اليومية في المغرب، وبسيط بما يكفي لتستعمله كل يوم.",
+    "f1.t":"أضف مصروفاً في ثوانٍ","f1.d":"المبلغ، الفئة، وانتهى. غيّر التاريخ أو أضف ملاحظة إن أردت.",
+    "f2.t":"فئات مغربية","f2.d":"البقالة، سيارة الأجرة، الإيجار، القهوة، الإنترنت… بالإضافة إلى فئاتك الخاصة.",
+    "f3.t":"الدخل وما تبقّى","f3.d":"أضف راتبك ومداخيلك الإضافية، واعرف دائماً ما تبقّى لك.",
+    "f4.t":"حدود الإنفاق","f4.d":"ضع حداً لكل فئة، واحصل على تنبيه قبل أن تتجاوزه.",
+    "f5.t":"رسوم بيانية واضحة","f5.d":"اعرف أين تذهب أموالك يومياً أو أسبوعياً أو شهرياً أو سنوياً.",
+    "f6.t":"ميزان، مساعدك الذكي","f6.d":"اسأله عن مصاريفك بلغتك. مدعوم بـ Google Gemini (يتطلب مفتاح API مجانياً).",
+    "f7.t":"تقرير PDF ونسخة احتياطية","f7.d":"صدّر تقريراً بصيغة PDF، واحفظ بياناتك في ملف، واسترجعها على هاتف جديد.",
+    "f8.t":"5 لغات و20 عملة","f8.d":"الدارجة والعربية والفرنسية والإنجليزية والإسبانية. الدرهم افتراضياً. مظهر داكن وفاتح.",
+    "s.title":"شاهده أثناء العمل","s.intro":"شاشات واضحة، وأرقام كبيرة، بلا فوضى.",
+    "s1":"اعرف أين تذهب أموالك","s2":"أضف مصروفاً في ثوانٍ","s3":"مصاريفك بنظرة واحدة","s4":"اسأل ميزان عن أي شيء",
+    "p.title":"بياناتك تبقى على هاتفك","p.intro":"ليس لفلوسي حسابات ولا خوادم خاصة. لا تغادر مصاريفك جهازك إلا إذا اخترت أن تسأل ميزان.",
+    "p.link":"اقرأ سياسة الخصوصية ←","p1":"بلا حساب، وبلا تسجيل","p2":"مصاريفك محفوظة على هاتفك فقط","p3":"نسخة احتياطية في ملف تتحكم فيه","p4":"احذف كل شيء بلمسة واحدة",
+    "c.title":"ابدأ اليوم","c.intro":"فلوسي مجاني، مع إعلان صغير في بعض الشاشات. لديك سؤال أو فكرة؟ راسلنا، نقرأ كل الرسائل.",
+    "foot.made":"صُنع في المغرب"
+  },
+  ary: {
+    "name":"فلوسي",
+    "nav.features":"المزايا","nav.screens":"تصاور","nav.privacy":"الخصوصية","nav.contact":"تواصل معانا","nav.policy":"سياسة الخصوصية",
+    "hero.tag":"مصنوع فالمغرب","hero.title":"تبّع كل <em>درهم</em>.",
+    "hero.lead":"تطبيق ساهل وخاص باش تتبّع المصاريف ديالك. سجّل شنو خسرتي فثواني، حط حدود، شوف شحال بقا ليك من الدخل، وسوّل ميزان، المساعد الذكي ديال الفلوس.",
+    "cta.small":"حمّلو من","hero.free":"فابور · أندرويد · بلا حساب",
+    "f.title":"كلشي لي محتاج، وما كاين حتى زيادة","f.intro":"مصاوب للحياة اليومية فالمغرب، وساهل باش تخدم بيه كل نهار.",
+    "f1.t":"زيد مصروف فثواني","f1.d":"المبلغ، الفئة، وسالينا. بدّل التاريخ ولا زيد ملاحظة إلا بغيتي.",
+    "f2.t":"فئات مغربية","f2.d":"سخرة، طاكسي، الكرا، قهوة، الويفي… وزيد الفئات ديالك.",
+    "f3.t":"الدخل وشحال بقا ليك","f3.d":"دخّل الخلصة والمداخيل الإضافية، وعرف ديما شحال بقا ليك.",
+    "f4.t":"حدود الإنفاق","f4.d":"حط حد لكل فئة، والتطبيق ينبّهك قبل ما تفوتو.",
+    "f5.t":"رسوم بيانية واضحة","f5.d":"شوف فين كيمشيو فلوسك: النهار، السيمانة، الشهر ولا العام.",
+    "f6.t":"ميزان، المساعد الذكي","f6.d":"سوّلو على المصاريف ديالك بلغتك. خدام بـ Google Gemini (خاصك مفتاح API فابور).",
+    "f7.t":"تقرير PDF ونسخة احتياطية","f7.d":"خرّج تقرير PDF، حفظ البيانات ديالك فملف، ورجّعها فتيليفون جديد.",
+    "f8.t":"5 لغات و20 عملة","f8.d":"الدارجة، العربية، الفرنسية، الإنجليزية والإسبانية. الدرهم هو الأساس. مظهر غامق وفاتح.",
+    "s.title":"شوف كيفاش خدام","s.intro":"شاشات نقية، أرقام كبار، وبلا تخربيق.",
+    "s1":"عرف فين كيمشيو فلوسك","s2":"زيد مصروف فثواني","s3":"المصاريف ديالك بنظرة وحدة","s4":"سوّل ميزان على أي حاجة",
+    "p.title":"البيانات ديالك كتبقى فالتيليفون ديالك","p.intro":"فلوسي ما عندوش حسابات ولا سيرفورات ديالو. المصاريف ديالك ما كيخرجوش من التيليفون، غير إلا بغيتي تسوّل ميزان.",
+    "p.link":"قرا سياسة الخصوصية ←","p1":"بلا حساب، بلا تسجيل","p2":"المصاريف محفوظين غير فالتيليفون ديالك","p3":"نسخة احتياطية فملف ديالك","p4":"مسح كلشي بلمسة وحدة",
+    "c.title":"بدا من اليوم","c.intro":"فلوسي فابور، مع إشهار صغير فشي شاشات. عندك سؤال ولا فكرة؟ صيفط لينا، كنقراو كلشي.",
+    "foot.made":"مصنوع فالمغرب"
+  }
+};
+const SHOT = { en:"en", es:"en", fr:"fr", ar:"ar", ary:"ar" };
+const HL = { en:"en", es:"es", fr:"fr", ar:"ar", ary:"ar" };
+const TITLE = { en:"Floussi – Track every dirham", fr:"Floussi – Suivez chaque dirham", es:"Floussi – Controla cada dírham", ar:"فلوسي – تتبّع كل درهم", ary:"فلوسي – تبّع كل درهم" };
+
+// Remember the English text so switching back works.
+document.querySelectorAll("[data-i]").forEach(el => { T.en[el.dataset.i] = el.hasAttribute("data-html") ? el.innerHTML : el.textContent; });
+
+function apply(lang) {
+  if (!T[lang]) lang = "en";
+  const rtl = lang === "ar" || lang === "ary";
+  document.documentElement.lang = lang === "ary" ? "ar-MA" : lang;
+  document.documentElement.dir = rtl ? "rtl" : "ltr";
+  document.title = TITLE[lang];
+  document.querySelectorAll("[data-i]").forEach(el => {
+    const v = T[lang][el.dataset.i] ?? T.en[el.dataset.i];
+    if (el.hasAttribute("data-html")) el.innerHTML = v; else el.textContent = v;
+  });
+  document.querySelectorAll("[data-shot]").forEach(img => { img.src = `img/${SHOT[lang]}-${img.dataset.shot}.webp`; });
+  document.querySelectorAll("a.play").forEach(a => { a.href = `${PLAY}&hl=${HL[lang]}`; });
+  document.getElementById("lang").value = lang;
+  try { localStorage.setItem("lang", lang); } catch (e) {}
+}
+
+function initial() {
+  const q = new URLSearchParams(location.search).get("lang");
+  if (q && T[q]) return q;
+  try { const s = localStorage.getItem("lang"); if (s && T[s]) return s; } catch (e) {}
+  const nav = (navigator.language || "en").toLowerCase();
+  if (nav === "ar-ma") return "ary";
+  const base = nav.split("-")[0];
+  return T[base] ? base : "en";
+}
+
+document.getElementById("lang").addEventListener("change", e => apply(e.target.value));
+apply(initial());
+</script>
+</body>
+</html>
